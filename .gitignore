@@ -1,0 +1,67 @@
+## .NET / C#
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+
+## Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## Visual Studio
+.vs/
+*.rsuser
+*.sln.iml
+
+## Rider / JetBrains
+.idea/
+*.sln.iml
+
+## Configuración local (connection strings, secrets, API keys)
+appsettings.Development.json
+appsettings.Local.json
+
+## User secrets
+secrets.json
+
+## Entity Framework Migrations (descomenta si quieres ignorarlas)
+# **/Migrations/
+
+## Uploads de usuarios
+SaludConecta.API/uploads/*
+!SaludConecta.API/uploads/.gitkeep
+
+## OS
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+
+## Logs
+*.log
+logs/
