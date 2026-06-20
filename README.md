@@ -1,83 +1,138 @@
-# SaludConecta-Backend
-Lugar donde vivira la API y sus dependencias de Salud Conecta
+# SaludConecta — Backend
 
-# Salud Conecta - Backend API
+[![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![MariaDB](https://img.shields.io/badge/MariaDB-10.6+-003545?logo=mariadb&logoColor=white)](https://mariadb.org/)
+[![EF Core](https://img.shields.io/badge/EF_Core-9-512BD4?logo=dotnet&logoColor=white)](https://learn.microsoft.com/ef/)
+[![Estado](https://img.shields.io/badge/estado-en_desarrollo-yellow)]()
 
-API REST para la gestión centralizada de historiales clínicos familiares. Permite a un usuario administrar perfiles de salud propios y de su círculo familiar, incluyendo antecedentes médicos, consultas, recetas, estudios clínicos y evolución biométrica.
+> Repositorio del frontend: [SaludConecta-Frontend](https://github.com/Dany1912-dev/SaludConecta-Frontend)
 
-## Stack Tecnológico
+---
 
-- **.NET 9.0** - Framework principal
-- **Entity Framework Core** - ORM para acceso a datos
-- **MariaDB** - Base de datos relacional
-- **JWT** - Autenticación basada en tokens
-- **Google OAuth** - Inicio de sesión con Google
+## La idea
+
+La información médica personal vive fragmentada: recetas en cajones, resultados de laboratorio en fotos del celular, el nombre del especialista anotado en alguna hoja perdida. En una emergencia, nadie recuerda qué medicamentos toma, qué alergias tiene ni cuándo fue la última consulta.
+
+**SaludConecta** es una cartilla médica digital personal. Permite registrar y centralizar todo el historial clínico propio y el de la familia en un solo lugar, accesible desde cualquier dispositivo. En caso de urgencia, se puede generar un resumen o descarga del historial completo en segundos.
+
+**Lo que se quiere lograr (visión completa):**
+- Registrar consultas médicas, diagnósticos y médicos tratantes
+- Guardar resultados de estudios clínicos (sangre, orina, radiografías, etc.)
+- Llevar un historial de recetas y medicamentos con dosis y frecuencias
+- Registrar antecedentes personales, heredofamiliares y alergias
+- Seguimiento biométrico (peso, estatura, signos vitales)
+- Calendario de citas y recordatorios
+- Gestión de perfiles familiares desde una sola cuenta
+- Exportar un resumen clínico del último año o del historial completo
+
+---
+
+## Estado actual
+
+El proyecto está en sus primeras fases. El dominio está modelado y la autenticación está implementada. Los módulos del historial clínico están definidos en entidades y configuraciones, pero sus endpoints aún no existen.
+
+| Capa | Estado |
+|------|--------|
+| Modelo de dominio (entidades + enums) | ✅ Completo |
+| Esquema de base de datos | ✅ Completo |
+| Autenticación (JWT + cookies + refresh) | ✅ Completo |
+| Verificación de correo / teléfono | 🔧 Parcial |
+| Google OAuth | ⏳ Pendiente |
+| Módulos del historial clínico | ⏳ Pendiente |
+| Exportación de historial | ⏳ Pendiente |
+
+---
 
 ## Arquitectura
 
-El proyecto sigue el patrón de **Clean Architecture** dividido en tres capas:
+Clean Architecture en tres capas. Las dependencias apuntan siempre hacia el centro:
 
 ```
 SaludConecta-Backend/
-├── SaludConecta.Core/             # Entidades, enums, interfaces
-├── SaludConecta.Infrastructure/   # DbContext, repositorios, servicios externos
-└── SaludConecta.API/              # Controllers, DTOs, middlewares
+├── SaludConecta.Core/              # Entidades, enums, interfaces, excepciones
+├── SaludConecta.Infrastructure/    # DbContext, repositorios, configuraciones EF
+└── SaludConecta.API/               # Controllers, servicios, middlewares (por features)
 ```
 
-**SaludConecta.Core** → El corazón del negocio. No depende de ningún otro proyecto. Contiene las entidades, enums, interfaces de repositorios y servicios, y excepciones personalizadas.
+**Core** — el corazón del negocio. Sin dependencias externas. Contiene todas las entidades del dominio, los enums, las interfaces de repositorios y los contratos de servicios.
 
-**SaludConecta.Infrastructure** → La capa de acceso a datos y servicios externos. Depende únicamente de Core. Contiene el DbContext, las configuraciones de Fluent API, las migraciones y las implementaciones de repositorios.
+**Infrastructure** — la capa de datos. Solo depende de Core. Contiene el DbContext, las configuraciones Fluent API por entidad, y las implementaciones de repositorios.
 
-**SaludConecta.API** → El punto de entrada HTTP. Depende de Core e Infrastructure. Organizado por **features** (módulos funcionales), donde cada módulo agrupa su controller, DTOs y servicio.
+**API** — el punto de entrada HTTP. Organizado por **features**: cada módulo funcional agrupa su controller, DTOs y servicio en una sola carpeta.
 
-## Módulos
+```
+Features/
+└── NombreModulo/
+    ├── NombreController.cs      # Endpoints
+    ├── CrearRequest.cs          # DTO de entrada
+    ├── NombreResponse.cs        # DTO de salida
+    └── NombreService.cs         # Lógica de negocio
+```
 
-| Módulo | Descripción |
-|--------|-------------|
-| **Auth** | Registro, login (local y Google), refresh tokens, recuperación de contraseña, verificación de teléfono |
-| **Perfiles** | Gestión de perfiles de pacientes (modo personal y familiar) |
-| **Biométricos** | Registro histórico de peso y estatura |
-| **Antecedentes** | Antecedentes personales, heredofamiliares y psicológicos |
-| **Estilo de Vida** | Hábitos de sueño, alimentación, actividad física, consumo de sustancias |
-| **Alergias** | Alergias alimentarias, medicamentosas, de contacto y ambientales |
-| **Eventos Quirúrgicos** | Cirugías, traumatismos, hospitalizaciones, transfusiones, inmunizaciones |
-| **Consultas** | Historial cronológico de citas médicas y diagnósticos |
-| **Recetas** | Recetas médicas con detalle de medicamentos, dosis y frecuencias |
-| **Estudios** | Estudios clínicos (sangre, orina, radiografías, etc.) |
-| **Archivos** | Archivos adjuntos vinculados a recetas, consultas y estudios |
+---
 
-## Base de Datos
+## Dominio
 
-MariaDB con 18 tablas organizadas por módulo. El esquema completo se encuentra en el archivo `database/salud_conecta_schema.sql`.
+Las entidades del sistema cubren el historial clínico completo de un paciente:
+
+| Entidad | Qué representa |
+|---------|----------------|
+| `Usuario` | Cuenta de acceso con soporte para login local y OAuth |
+| `PerfilPaciente` | Datos clínicos base: tipo de sangre, sexo, fecha de nacimiento |
+| `RegistroBiometrico` | Evolución de peso y estatura a lo largo del tiempo |
+| `PerfilEstiloVida` | Hábitos de sueño, alimentación, actividad física, consumo de sustancias |
+| `Alergia` | Alergias con tipo, severidad y sustancia causante |
+| `AntecedentePersonal` | Condiciones médicas previas del paciente |
+| `AntecedenteHeredofamiliar` | Historial médico de familiares directos |
+| `AntecedentePsicologico` | Antecedentes de salud mental |
+| `EventoQuirurgico` | Cirugías, hospitalizaciones, traumatismos, transfusiones, vacunas |
+| `Consulta` | Citas médicas con diagnóstico, médico tratante y especialidad |
+| `Receta` | Recetas médicas vinculadas a una consulta |
+| `MedicamentoReceta` | Detalle de cada medicamento: dosis, frecuencia, vía de administración |
+| `EstudioClinico` | Estudios de laboratorio e imagen vinculados a consultas |
+| `ArchivoAdjunto` | Archivos PDF o imagen vinculados a recetas, consultas o estudios |
+| `CatalogoCondicionMedica` | Catálogo de condiciones médicas para estandarizar diagnósticos |
+| `RefreshToken` | Tokens de refresco para rotación de sesión |
+| `CodigoVerificacion` | Códigos temporales para verificación de correo y teléfono |
+| `ProveedorAutenticacion` | Proveedores OAuth vinculados al usuario (Google, etc.) |
+
+---
+
+## Autenticación
+
+JWT almacenado en **cookies HttpOnly** — el token nunca es accesible desde JavaScript:
+
+```
+Access token   → 30 minutos  → cookie HttpOnly, Secure, SameSite=Lax
+Refresh token  → 7 días      → cookie HttpOnly
+```
+
+Cuando el access token expira, el frontend intercepta el `401` y llama a `/api/auth/refresh` de forma transparente. Si el refresh también falla, se despacha el evento `sc:sesion-expirada` para limpiar la sesión en el cliente.
+
+---
 
 ## Configuración
 
-### Prerrequisitos
-
+**Prerrequisitos:**
 - [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- [MariaDB 10.6+](https://mariadb.org/download/)
+- MariaDB 10.6+
 
-### Instalación
+**Instalación:**
 
-1. Clonar el repositorio:
 ```bash
-git clone https://github.com/tu-usuario/SaludConecta-Backend.git
+git clone https://github.com/Dany1912-dev/SaludConecta-Backend.git
 cd SaludConecta-Backend
 ```
 
-2. Crear el archivo de configuración local:
-```bash
-cp SaludConecta.API/appsettings.json SaludConecta.API/appsettings.Development.json
-```
+Crea `SaludConecta.API/appsettings.Development.json` con tus datos:
 
-3. Editar `appsettings.Development.json` con tus datos:
 ```json
 {
   "ConnectionStrings": {
     "DefaultConnection": "Server=localhost;Database=salud_conecta;User=tu_usuario;Password=tu_contraseña;"
   },
   "JwtSettings": {
-    "SecretKey": "tu_secret_key_minimo_32_caracteres",
+    "SecretKey": "clave-secreta-minimo-32-caracteres",
     "Issuer": "SaludConecta",
     "Audience": "SaludConecta",
     "AccessTokenExpirationMinutes": 30,
@@ -90,34 +145,19 @@ cp SaludConecta.API/appsettings.json SaludConecta.API/appsettings.Development.js
 }
 ```
 
-4. Crear la base de datos ejecutando el script SQL en MariaDB:
-```bash
-mysql -u tu_usuario -p < database/salud_conecta_schema.sql
-```
-
-5. Compilar y ejecutar:
 ```bash
 dotnet build
 dotnet run --project SaludConecta.API
 ```
 
-## 📁 Estructura de Features
+---
 
-Cada módulo sigue la misma organización interna:
+## Tecnologías
 
-```
-Features/
-└── Consultas/
-    ├── ConsultasController.cs      # Endpoints HTTP
-    ├── CrearConsultaRequest.cs      # DTO de entrada
-    ├── ConsultaResponse.cs          # DTO de salida
-    └── ConsultasService.cs          # Lógica de negocio
-```
-
-## Proyecto Relacionado
-
-- [SaludConecta-Frontend](https://github.com/Dany1912-dev/SaludConecta-Frontend) - Interfaz web con React + Vite
-
-## Licencia
-
-Este proyecto es de uso personal y educativo.
+| | |
+|--|--|
+| Framework | .NET 9, ASP.NET Core Web API |
+| ORM | Entity Framework Core 9 |
+| Base de datos | MariaDB 10.6+ |
+| Autenticación | JWT (cookies HttpOnly) + Google OAuth |
+| Arquitectura | Clean Architecture (Core / Infrastructure / API) |
