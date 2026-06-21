@@ -1,12 +1,4 @@
-namespace SaludConecta.Core.Interfaces.Services;
-
-public interface IAuthService
-{
-    Task<AuthResult> RegistrarAsync(string nombre, string correo, string contrasena, string? telefono);
-    Task<AuthResult> LoginAsync(string correo, string contrasena);
-    Task<AuthResult> RefrescarTokenAsync(string refreshToken);
-    Task RevocarRefreshTokenAsync(string refreshToken);
-}
+namespace SaludConecta.Application.DTOs;
 
 public class AuthResult
 {

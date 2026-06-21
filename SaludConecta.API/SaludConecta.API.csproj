@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SaludConecta.Core\SaludConecta.Core.csproj" />
+    <ProjectReference Include="..\SaludConecta.Application\SaludConecta.Application.csproj" />
     <ProjectReference Include="..\SaludConecta.Infrastructure\SaludConecta.Infrastructure.csproj" />
   </ItemGroup>
 
