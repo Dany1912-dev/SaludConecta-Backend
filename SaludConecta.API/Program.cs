@@ -38,6 +38,13 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Aplicar migraciones pendientes al iniciar
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<SaludConectaDbContext>();
+    db.Database.Migrate();
+}
+
 // Middleware de excepciones (debe ir primero)
 app.UseMiddleware<ExceptionMiddleware>();
 
