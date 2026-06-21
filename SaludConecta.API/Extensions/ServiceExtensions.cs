@@ -1,10 +1,10 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using SaludConecta.API.Configurations;
-using SaludConecta.API.Features.Auth;
+using SaludConecta.Application.Configurations;
+using SaludConecta.Application.Features.Auth;
+using SaludConecta.Application.Interfaces.Services;
 using SaludConecta.Core.Interfaces.Repositories;
-using SaludConecta.Core.Interfaces.Services;
 using SaludConecta.Infrastructure.Repositories;
 
 namespace SaludConecta.API.Extensions;

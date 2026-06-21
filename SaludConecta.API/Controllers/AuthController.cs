@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using SaludConecta.API.Configurations;
-using SaludConecta.Core.Interfaces.Services;
+using SaludConecta.API.Contracts.Auth;
+using SaludConecta.Application.Configurations;
+using SaludConecta.Application.Interfaces.Services;
 
-namespace SaludConecta.API.Features.Auth;
+namespace SaludConecta.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -117,7 +118,18 @@ public class AuthController : ControllerBase
 
     private void EliminarCookiesDeTokens()
     {
-        Response.Cookies.Delete("access_token");
-        Response.Cookies.Delete("refresh_token", new CookieOptions { Path = "/api/auth" });
+        Response.Cookies.Delete("access_token", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict
+        });
+        Response.Cookies.Delete("refresh_token", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Path = "/api/auth"
+        });
     }
 }

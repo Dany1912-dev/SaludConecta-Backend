@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SaludConecta.API.Features.Auth;
+namespace SaludConecta.API.Contracts.Auth;
 
 public class RefreshTokenRequest
 {

@@ -1,4 +1,4 @@
-namespace SaludConecta.API.Features.Auth;
+namespace SaludConecta.API.Contracts.Auth;
 
 public class AuthResponse
 {
