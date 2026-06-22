@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SaludConecta.Application.Configurations;
 using SaludConecta.Application.Features.Auth;
+using SaludConecta.Application.Features.Perfiles;
 using SaludConecta.Application.Interfaces.Services;
 using SaludConecta.Core.Interfaces.Repositories;
 using SaludConecta.Infrastructure.Repositories;
@@ -16,12 +17,14 @@ public static class ServiceExtensions
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<IProveedorAutenticacionRepository, ProveedorAutenticacionRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IPerfilPacienteRepository, PerfilPacienteRepository>();
         return services;
     }
 
     public static IServiceCollection AddServicios(this IServiceCollection services)
     {
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IPerfilPacienteService, PerfilPacienteService>();
         return services;
     }
 
