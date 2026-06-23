@@ -2,7 +2,10 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SaludConecta.Application.Configurations;
+using SaludConecta.Application.Features.Antecedentes;
 using SaludConecta.Application.Features.Auth;
+using SaludConecta.Application.Features.EstiloVida;
+using SaludConecta.Application.Features.Alergias;
 using SaludConecta.Application.Features.Perfiles;
 using SaludConecta.Application.Interfaces.Services;
 using SaludConecta.Core.Interfaces.Repositories;
@@ -18,6 +21,12 @@ public static class ServiceExtensions
         services.AddScoped<IProveedorAutenticacionRepository, ProveedorAutenticacionRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IPerfilPacienteRepository, PerfilPacienteRepository>();
+        services.AddScoped<IAlergiaRepository, AlergiaRepository>();
+        services.AddScoped<IPerfilEstiloVidaRepository, PerfilEstiloVidaRepository>();
+        services.AddScoped<ICatalogoCondicionMedicaRepository, CatalogoCondicionMedicaRepository>();
+        services.AddScoped<IAntecedentePersonalRepository, AntecedentePersonalRepository>();
+        services.AddScoped<IAntecedenteHeredofamiliarRepository, AntecedenteHeredofamiliarRepository>();
+        services.AddScoped<IAntecedentePsicologicoRepository, AntecedentePsicologicoRepository>();
         return services;
     }
 
@@ -25,6 +34,9 @@ public static class ServiceExtensions
     {
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPerfilPacienteService, PerfilPacienteService>();
+        services.AddScoped<IAlergiaService, AlergiaService>();
+        services.AddScoped<IEstiloVidaService, EstiloVidaService>();
+        services.AddScoped<IAntecedenteService, AntecedenteService>();
         return services;
     }
 
